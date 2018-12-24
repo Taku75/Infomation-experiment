@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 
 class SerialPort
 {
@@ -20,8 +21,8 @@ public:
 	SerialPort(char *portName);
 	~SerialPort();
 
-	int readSerialPort(char *buffer, unsigned int buf_size);
-	bool writeSerialPort(char *buffer, unsigned int buf_size);
+	int readSerialPort(byte *buffer, unsigned int buf_size);
+	bool writeSerialPort(byte* buffer,unsigned int buffer_size);
 	bool isConnected();
 };
 

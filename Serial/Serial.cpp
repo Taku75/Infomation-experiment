@@ -1,5 +1,6 @@
 #include "Serial.h"
-
+#include "iostream"
+#include <vector>
 SerialPort::SerialPort(char *portName)
 {
 	this->connected = false;
@@ -54,7 +55,7 @@ SerialPort::~SerialPort()
 	}
 }
 
-int SerialPort::readSerialPort(char *buffer, unsigned int buf_size)
+int SerialPort::readSerialPort(byte *buffer, unsigned int buf_size)
 {
 	DWORD bytesRead;
 	unsigned int toRead = 0;
@@ -75,11 +76,10 @@ int SerialPort::readSerialPort(char *buffer, unsigned int buf_size)
 	return 0;
 }
 
-bool SerialPort::writeSerialPort(char *buffer, unsigned int buf_size)
+bool SerialPort::writeSerialPort(byte* buffer, unsigned int buffer_size)
 {
 	DWORD bytesSend;
-
-	if (!WriteFile(this->handler, (void*)buffer, buf_size, &bytesSend, 0)) {
+	if (!WriteFile(this->handler, buffer, buffer_size, &bytesSend, 0)) {
 		ClearCommError(this->handler, &this->errors, &this->status);
 		return false;
 	}

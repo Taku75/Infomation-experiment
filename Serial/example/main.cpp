@@ -1,20 +1,24 @@
 #include <iostream>
 #include "Serial.h"
+#include <vector>
 #include <stdio.h>
-#include <string.h>
+//#include <string.h>
 
 using namespace std;
 
 const char* portName = "\\\\.\\COM5";
 char* port = const_cast<char *>(portName);
-#define MAX_DATA_LENGTH 3
+#define MAX_DATA_LENGTH 255
 
-char incomingData[MAX_DATA_LENGTH];
+byte incomingData[MAX_DATA_LENGTH];
 
 //Control signals for turning on and turning off the led
 //Check m5stack code
-char ledON[] = "ON\r\n";
-char ledOFF[] = "OFF\r\n";
+byte ledON[] = "ON";
+byte ledOFF[] = "OFF";
+unsigned int ledON_size = 2;
+unsigned int ledOFF_size = 3;
+
 
 //m5stack SerialPort object
 SerialPort *m5stack;
@@ -34,9 +38,9 @@ void exampleReceiveData(void)
 
 void exampleWriteData(unsigned int delayTime)
 {
-	m5stack->writeSerialPort(ledON, MAX_DATA_LENGTH);
+	m5stack->writeSerialPort(ledON,ledON_size);
 	Sleep(delayTime);
-	m5stack->writeSerialPort(ledOFF, MAX_DATA_LENGTH);
+	m5stack->writeSerialPort(ledOFF,ledOFF_size);
 	Sleep(delayTime);
 }
 
@@ -66,6 +70,5 @@ void autoConnect(void)
 int main()
 {
 	m5stack = new SerialPort(port);
-
 	autoConnect();
 }
