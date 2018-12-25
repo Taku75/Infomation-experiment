@@ -1,10 +1,10 @@
 # Serial
-![Badge Status](https://ci-as-a-service)
+====
 WindowsでSerial Portを使うクラス
 
 ## Dependency
 使用言語：C++
-必要ライブラリ：windows.h
+必要ライブラリ：windows.h  
                stdio.h
 
 ## Usage
