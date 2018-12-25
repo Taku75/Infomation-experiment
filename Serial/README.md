@@ -1,5 +1,6 @@
 # Serial
 ====
+
 WindowsでSerial Portを使うクラス
 
 ## Dependency
