@@ -5,8 +5,7 @@ WindowsでSerial Portを使うクラス
 
 ## Dependency
 使用言語：C++
-必要ライブラリ：windows.h  
-               stdio.h
+必要ライブラリ：windows.h, stdio.h
 
 ## Usage
 ### インスタンス化
