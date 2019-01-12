@@ -1,74 +1,56 @@
-#include <iostream>
 #include "Serial.h"
 #include <vector>
-#include <stdio.h>
-//#include <string.h>
+#include <string>
+#include <iostream>
+#include <bitset>
 
 using namespace std;
 
-const char* portName = "\\\\.\\COM5";
-char* port = const_cast<char *>(portName);
-#define MAX_DATA_LENGTH 255
-
-byte incomingData[MAX_DATA_LENGTH];
-
-//Control signals for turning on and turning off the led
-//Check m5stack code
-byte ledON[] = "ON";
-byte ledOFF[] = "OFF";
-unsigned int ledON_size = 2;
-unsigned int ledOFF_size = 3;
-
-
-//m5stack SerialPort object
-SerialPort *m5stack;
-
-//Blinking Delay
-const unsigned int BLINKING_DELAY = 1000;
-
-//If you want to send data then define "SEND" else comment it out
-//#define SEND
-
-void exampleReceiveData(void)
-{
-	int readResult = m5stack->readSerialPort(incomingData, MAX_DATA_LENGTH);
-	printf("%s", incomingData);
-	Sleep(10);
-}
-
-void exampleWriteData(unsigned int delayTime)
-{
-	m5stack->writeSerialPort(ledON,ledON_size);
-	Sleep(delayTime);
-	m5stack->writeSerialPort(ledOFF,ledOFF_size);
-	Sleep(delayTime);
-}
-
-void autoConnect(void)
-{
-	//wait connection
-	while (!m5stack->isConnected()) {
-		Sleep(100);
-		m5stack = new SerialPort(port);
+int main() {
+	auto list = getSerialList();
+	for (const auto info : list) {
+		cout << "device name:" << info.device_name() << endl;
+		cout << "name:" << info.port() << "\n" << endl;
 	}
-
-	//Checking if m5stack is connected or not
-	if (m5stack->isConnected()) {
-		std::cout << "Connection established at port " << portName << endl;
+	Serial serial;
+	Serial dev;
+	/*int port;
+	cin >> port;
+	if (!serial.open(list[port]))
+		return -1;
+	*/
+	for (const auto info : list)
+	{
+		if (!serial.isOpened())
+		{
+			if (serial.open(info))
+			{
+				unsigned char c = 'S';
+				serial.write(&c, 1);
+				while (serial.available() == 0) {};
+				auto v = serial.read();
+				if (v[0] != 'k')
+				{
+					serial.close();
+				}
+			}
+		}
 	}
+	SerialInfo info = serial.getInfo();
+	cout << "open success" << endl;
+	cout << "device name:" << info.device_name() << endl;
+	cout << "name:" << info.port() << "\n" << endl;
+	while (true) {
+		unsigned char c = 'a';
+		//serial.write(&c, 1);
+		if (serial.available() > 0)
+		{
+			auto v = serial.read();
+			for (auto c : v) {
+				cout << c;
+			}
+		}
 
-#ifdef SEND
-	while (m5stack->isConnected()) exampleWriteData(BLINKING_DELAY);
-#else // SEND
-	while (m5stack->isConnected()) exampleReceiveData();
-#endif // SEND
-
-	//if the serial connection is lost
-	autoConnect();
-}
-
-int main()
-{
-	m5stack = new SerialPort(port);
-	autoConnect();
+	}
+	return 0;
 }
